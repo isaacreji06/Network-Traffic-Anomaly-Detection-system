@@ -98,3 +98,26 @@ Data acts as evidence to answer the question. For an ML-based IDS, the types of 
 
 
 ---
+
+## Development Environment Setup
+
+**Operating System:** Windows 11 
+**Python Version:** Python 3.12.5  
+**Anaconda Version:** conda 25.11.0  
+
+### Setup Steps
+1. Installed Python via Anaconda distribution
+2. Verified Python installation using `python --version`
+3. Verified Conda installation using `conda --version`
+4. Activated Conda base environment
+5. Launched Python from terminal to confirm setup
+
+### Verification Commands
+```bash
+python --version
+conda --version
+
+---
+
+### Verification Proof
+![Python and conda Version](Screenshots/Python_conda_installation.png)
