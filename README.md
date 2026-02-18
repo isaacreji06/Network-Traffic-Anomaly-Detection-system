@@ -116,7 +116,7 @@ Data acts as evidence to answer the question. For an ML-based IDS, the types of 
 ```bash
 python --version
 conda --version
-
+```
 ---
 
 ### Verification Proof
