@@ -118,6 +118,32 @@ python --version
 conda --version
 ```
 ---
-
+```
 ### Verification Proof
 ![Python and conda Version](Screenshots/Python_conda_installation.png)
+
+## Environment Verification
+
+**Operating System:** Windows 11  
+**Python Version:** Python 3.12.5  
+**Conda Version:** conda 25.11.0  
+**Environment Used:** base
+
+### Verification Steps
+1. Verified Python using `python --version` and Python REPL
+2. Verified Conda using `conda --version`, listed environments, and activated base
+3. Verified Jupyter by launching notebook and running a simple Python cell
+
+### Proof
+```bash
+python --version
+Python 3.12.5
+
+conda --version
+conda 25.11.0
+
+# Jupyter notebook launched successfully and Python cell executed
+```
+
+![Python and conda installed Version](Screenshots/Python_Conda_installation_verify.png)
+![Jupyter notebook installed ](Screenshots/Jupyter_Notebook.png)
