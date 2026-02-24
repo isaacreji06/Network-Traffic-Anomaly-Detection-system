@@ -14,16 +14,51 @@ def load_raw_data(file_path):
 
 def clean_data(df):
     """
-    Perform basic preprocessing.
-    Keep this minimal for now.
+    Perform basic preprocessing with conditional logic.
     """
+
     print("Starting basic data cleaning...")
 
-    # Example: drop duplicate rows
-    df = df.drop_duplicates()
+    # 1️⃣ Conditional check before cleaning
+    if df.empty:
+        print("⚠️ Warning: DataFrame is empty.")
+        return df
+    else:
+        print(f"Initial rows: {len(df)}")
 
-    # Example: handle missing values (simple approach)
-    df = df.dropna()
+    # 2️⃣ Drop duplicates
+    duplicate_count = df.duplicated().sum()
+
+    if duplicate_count > 0:
+        print(f"Found {duplicate_count} duplicate rows. Removing them...")
+        df = df.drop_duplicates()
+    else:
+        print("No duplicate rows found.")
+
+    # 3️⃣ Handle missing values using conditional logic
+    missing_count = df.isnull().sum().sum()
+
+    if missing_count > 0:
+        print(f"Found {missing_count} missing values. Dropping rows with missing data.")
+        df = df.dropna()
+    else:
+        print("No missing values detected.")
+
+    # 4️⃣ Example of multi-branch conditional (traffic-based logic)
+    row_count = len(df)
+
+    if row_count > 100000:
+        print("Large dataset detected.")
+    elif row_count > 10000:
+        print("Moderate dataset size.")
+    else:
+        print("Small dataset.")
+
+    # 5️⃣ Logical operators example
+    if row_count > 0 and not df.empty:
+        print("Dataset is valid for further analysis.")
+    else:
+        print("Dataset is not valid for analysis.")
 
     print("Cleaning completed.")
     return df
