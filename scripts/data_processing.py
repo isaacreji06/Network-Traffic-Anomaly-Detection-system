@@ -125,6 +125,46 @@ def loop_demonstration():
             print("Stopping early using break")
             break
 
+def function_demonstration():
+    """
+    Milestone 4.18 - Function Definition and Calling
+    """
+
+    print("\n--- Function Demonstration ---")
+
+    # 1️⃣ Simple function
+    def greet_user(name):
+        print(f"Hello, {name}! Welcome to the Network Monitoring System.")
+
+    greet_user("Ain")  # calling function
+
+
+    # 2️⃣ Function with parameters and return value
+    def calculate_total_packets(incoming, outgoing):
+        total = incoming + outgoing
+        return total
+
+    total_packets = calculate_total_packets(150, 200)
+    print(f"Total packets processed: {total_packets}")
+
+
+    # 3️⃣ Scope demonstration
+    global_message = "Monitoring Active"
+
+    def scope_example():
+        local_message = "Analyzing traffic..."
+        print("Inside function:")
+        print(local_message)
+        print(global_message)
+
+    scope_example()
+
+    print("Outside function:")
+    print(global_message)
+
+    # If you try printing local_message here, it will fail
+    # print(local_message)  # ❌ Not accessible outside
+
 
 def main():
     # Resolve project root
@@ -147,6 +187,7 @@ def main():
 
     # Loop demonstration (Milestone 4.17)
     loop_demonstration()
+    function_demonstration()
 
 
 if __name__ == "__main__":
