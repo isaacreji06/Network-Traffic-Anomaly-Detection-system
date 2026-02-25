@@ -1,234 +1,184 @@
+"""
+Network Traffic Anomaly Detection System
+Data Processing Module
+
+Demonstrates:
+- Conditional logic
+- Loop structures
+- Function definitions
+- Data flow using return values
+- Basic PEP 8 readability standards
+"""
+
 import pandas as pd
 from pathlib import Path
 
 
 def load_raw_data(file_path):
     """
-    Load raw network traffic data from CSV.
+    Load raw network traffic data from a CSV file.
     Raw data should never be modified directly.
     """
     print(f"Loading raw data from {file_path}")
-    df = pd.read_csv(file_path)
-    return df
+    dataframe = pd.read_csv(file_path)
+    return dataframe
 
 
-def clean_data(df):
+def clean_data(dataframe):
     """
-    Perform basic preprocessing with conditional logic.
+    Perform basic preprocessing to ensure data integrity.
     """
 
     print("Starting basic data cleaning...")
 
-    # 1️⃣ Conditional check before cleaning
-    if df.empty:
-        print("⚠️ Warning: DataFrame is empty.")
-        return df
-    else:
-        print(f"Initial rows: {len(df)}")
+    # Ensure dataset is not empty before processing
+    if dataframe.empty:
+        print("Warning: Dataset is empty.")
+        return dataframe
 
-    # 2️⃣ Drop duplicates
-    duplicate_count = df.duplicated().sum()
+    print(f"Initial row count: {len(dataframe)}")
 
-    if duplicate_count > 0:
-        print(f"Found {duplicate_count} duplicate rows. Removing them...")
-        df = df.drop_duplicates()
+    # Remove duplicate rows if present
+    duplicate_row_count = dataframe.duplicated().sum()
+    if duplicate_row_count > 0:
+        print(f"Removing {duplicate_row_count} duplicate rows.")
+        dataframe = dataframe.drop_duplicates()
     else:
         print("No duplicate rows found.")
 
-    # 3️⃣ Handle missing values using conditional logic
-    missing_count = df.isnull().sum().sum()
-
-    if missing_count > 0:
-        print(f"Found {missing_count} missing values. Dropping rows with missing data.")
-        df = df.dropna()
+    # Remove rows with missing values
+    missing_value_count = dataframe.isnull().sum().sum()
+    if missing_value_count > 0:
+        print(f"Removing rows with {missing_value_count} missing values.")
+        dataframe = dataframe.dropna()
     else:
         print("No missing values detected.")
 
-    # 4️⃣ Example of multi-branch conditional (traffic-based logic)
-    row_count = len(df)
+    total_row_count = len(dataframe)
 
-    if row_count > 100000:
+    if total_row_count > 100000:
         print("Large dataset detected.")
-    elif row_count > 10000:
+    elif total_row_count > 10000:
         print("Moderate dataset size.")
     else:
         print("Small dataset.")
 
-    # 5️⃣ Logical operators example
-    if row_count > 0 and not df.empty:
+    if total_row_count > 0:
         print("Dataset is valid for further analysis.")
     else:
         print("Dataset is not valid for analysis.")
 
     print("Cleaning completed.")
-    return df
+    return dataframe
 
 
-def save_processed_data(df, output_path):
+def save_processed_data(dataframe, output_path):
     """
-    Save processed data to processed folder.
+    Save cleaned data to the processed data folder.
     """
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output_path, index=False)
+    dataframe.to_csv(output_path, index=False)
     print(f"Processed data saved to {output_path}")
+
 
 def loop_demonstration():
     """
-    Milestone 4.17 - Loop Demonstration
-
-    
+    Demonstrate usage of for and while loops.
     """
 
     print("\n--- Loop Demonstration ---")
 
-    # 1️⃣ FOR LOOP - Iterating over range
     print("\nFor loop over range:")
-    for i in range(5):
-        print(f"Iteration number: {i}")
+    for iteration_number in range(5):
+        print(f"Iteration number: {iteration_number}")
 
-    # 2️⃣ FOR LOOP - Iterating over list
     print("\nFor loop over list:")
-    network_status = ["normal", "normal", "anomaly", "normal"]
+    traffic_status_list = ["normal", "normal", "anomaly", "normal"]
 
-    for status in network_status:
-        if status == "anomaly":
-            print("⚠️ Anomaly detected in traffic")
-            continue  # Skip remaining logic for this iteration
-        print("Traffic is normal")
+    for traffic_status in traffic_status_list:
+        if traffic_status == "anomaly":
+            print("Anomaly detected in traffic.")
+            continue
+        print("Traffic is normal.")
 
-    # 3️⃣ WHILE LOOP - Condition-based repetition
     print("\nWhile loop example:")
-    counter = 0
+    attempt_counter = 0
 
-    while counter < 3:
-        print(f"Counter value: {counter}")
-        counter += 1  # Critical: updating variable to avoid infinite loop
+    while attempt_counter < 3:
+        print(f"Counter value: {attempt_counter}")
+        attempt_counter += 1
 
-    # 4️⃣ BREAK example
     print("\nBreak example:")
     for value in range(10):
         if value == 4:
-            print("Breaking loop at value 4")
+            print("Stopping loop at value 4.")
             break
         print(f"Value: {value}")
 
-    # 5️⃣ Safe loop with condition check
-    print("\nSafe while loop with condition:")
-    attempts = 0
-    max_attempts = 5
 
-    while attempts < max_attempts:
-        print(f"Attempt {attempts}")
-        attempts += 1
-
-        if attempts == 3:
-            print("Stopping early using break")
-            break
-
-def function_demonstration():
-    """
-    Milestone 4.18 - Function Definition and Calling
-    """
-
-    print("\n--- Function Demonstration ---")
-
-    # 1️⃣ Simple function
-    def greet_user(name):
-        print(f"Hello, {name}! Welcome to the Network Monitoring System.")
-
-    greet_user("Ain")  # calling function
-
-
-    # 2️⃣ Function with parameters and return value
-    def calculate_total_packets(incoming, outgoing):
-        total = incoming + outgoing
-        return total
-
-    total_packets = calculate_total_packets(150, 200)
-    print(f"Total packets processed: {total_packets}")
-
-
-    # 3️⃣ Scope demonstration
-    global_message = "Monitoring Active"
-
-    def scope_example():
-        local_message = "Analyzing traffic..."
-        print("Inside function:")
-        print(local_message)
-        print(global_message)
-
-    scope_example()
-
-    print("Outside function:")
-    print(global_message)
-
-    # If you try printing local_message here, it will fail
-    # print(local_message)  # ❌ Not accessible outside
 def calculate_packet_ratio(incoming_packets, outgoing_packets):
     """
-    Accepts incoming and outgoing packet counts.
-    Returns the ratio of incoming to outgoing packets.
+    Calculate ratio of incoming to outgoing packets.
+    Returns None if division is not possible.
     """
-
     if outgoing_packets == 0:
-        return None  # Avoid division by zero
+        return None
 
-    ratio = incoming_packets / outgoing_packets
-    return ratio
+    return incoming_packets / outgoing_packets
 
 
-def classify_traffic(ratio):
+def classify_traffic(packet_ratio):
     """
-    Accepts a packet ratio.
-    Returns traffic classification string.
+    Classify traffic pattern based on packet ratio.
     """
-
-    if ratio is None:
+    if packet_ratio is None:
         return "Undefined (division by zero)"
 
-    if ratio > 1.5:
+    if packet_ratio > 1.5:
         return "High Incoming Traffic"
-    elif ratio < 0.5:
+    if packet_ratio < 0.5:
         return "High Outgoing Traffic"
-    else:
-        return "Balanced Traffic"
+
+    return "Balanced Traffic"
 
 
 def main():
-    # Resolve project root
+    """
+    Main execution pipeline.
+    """
+
     project_root = Path(__file__).resolve().parent.parent
 
-    # Paths
     raw_data_path = project_root / "data" / "raw" / "Monday-WorkingHours.pcap_ISCX.csv"
     processed_data_path = project_root / "data" / "processed" / "network_data_cleaned.csv"
 
-    # Conditional file check
     if not raw_data_path.exists():
-        print("Raw data not found. Skipping data loading for now.")
-        df_cleaned = None
+        print("Raw data not found. Skipping data loading.")
     else:
-        df_raw = load_raw_data(raw_data_path)
-        df_cleaned = clean_data(df_raw)
-        save_processed_data(df_cleaned, processed_data_path)
+        raw_dataframe = load_raw_data(raw_data_path)
+        cleaned_dataframe = clean_data(raw_dataframe)
+        save_processed_data(cleaned_dataframe, processed_data_path)
 
-    print("Data processing pipeline completed successfully.")
+    print("\nData processing pipeline completed successfully.")
 
-    # Loop demonstration (Milestone 4.17)
     loop_demonstration()
-    function_demonstration()
-    print("\n--- Data Flow Demonstration (4.19) ---")
 
-incoming = 300
-outgoing = 150
+    print("\n--- Data Flow Demonstration ---")
 
-ratio = calculate_packet_ratio(incoming, outgoing)
+    incoming_packet_count = 300
+    outgoing_packet_count = 150
 
-classification = classify_traffic(ratio)
+    packet_ratio = calculate_packet_ratio(
+        incoming_packet_count,
+        outgoing_packet_count
+    )
 
-print(f"Incoming packets: {incoming}")
-print(f"Outgoing packets: {outgoing}")
-print(f"Traffic ratio: {ratio}")
-print(f"Traffic classification: {classification}")
+    traffic_classification = classify_traffic(packet_ratio)
+
+    print(f"Incoming packets: {incoming_packet_count}")
+    print(f"Outgoing packets: {outgoing_packet_count}")
+    print(f"Packet ratio: {packet_ratio}")
+    print(f"Traffic classification: {traffic_classification}")
 
 
 if __name__ == "__main__":
