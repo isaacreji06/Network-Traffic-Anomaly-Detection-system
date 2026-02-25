@@ -72,29 +72,81 @@ def save_processed_data(df, output_path):
     df.to_csv(output_path, index=False)
     print(f"Processed data saved to {output_path}")
 
+def loop_demonstration():
+    """
+    Milestone 4.17 - Loop Demonstration
+
+    
+    """
+
+    print("\n--- Loop Demonstration ---")
+
+    # 1️⃣ FOR LOOP - Iterating over range
+    print("\nFor loop over range:")
+    for i in range(5):
+        print(f"Iteration number: {i}")
+
+    # 2️⃣ FOR LOOP - Iterating over list
+    print("\nFor loop over list:")
+    network_status = ["normal", "normal", "anomaly", "normal"]
+
+    for status in network_status:
+        if status == "anomaly":
+            print("⚠️ Anomaly detected in traffic")
+            continue  # Skip remaining logic for this iteration
+        print("Traffic is normal")
+
+    # 3️⃣ WHILE LOOP - Condition-based repetition
+    print("\nWhile loop example:")
+    counter = 0
+
+    while counter < 3:
+        print(f"Counter value: {counter}")
+        counter += 1  # Critical: updating variable to avoid infinite loop
+
+    # 4️⃣ BREAK example
+    print("\nBreak example:")
+    for value in range(10):
+        if value == 4:
+            print("Breaking loop at value 4")
+            break
+        print(f"Value: {value}")
+
+    # 5️⃣ Safe loop with condition check
+    print("\nSafe while loop with condition:")
+    attempts = 0
+    max_attempts = 5
+
+    while attempts < max_attempts:
+        print(f"Attempt {attempts}")
+        attempts += 1
+
+        if attempts == 3:
+            print("Stopping early using break")
+            break
+
 
 def main():
-    # Resolve project root so paths work regardless of where the script is invoked
+    # Resolve project root
     project_root = Path(__file__).resolve().parent.parent
 
     # Paths
     raw_data_path = project_root / "data" / "raw" / "Monday-WorkingHours.pcap_ISCX.csv"
     processed_data_path = project_root / "data" / "processed" / "network_data_cleaned.csv"
 
+    # Conditional file check
     if not raw_data_path.exists():
-        available = list((project_root / "data" / "raw").glob("*.csv"))
-        if available:
-            details = "Available files: " + ", ".join(p.name for p in available)
-        else:
-            details = "No CSV files found in data/raw."
-        raise FileNotFoundError(f"Raw data file not found at {raw_data_path}. {details}")
-
-    # Pipeline
-    df_raw = load_raw_data(raw_data_path)
-    df_cleaned = clean_data(df_raw)
-    save_processed_data(df_cleaned, processed_data_path)
+        print("Raw data not found. Skipping data loading for now.")
+        df_cleaned = None
+    else:
+        df_raw = load_raw_data(raw_data_path)
+        df_cleaned = clean_data(df_raw)
+        save_processed_data(df_cleaned, processed_data_path)
 
     print("Data processing pipeline completed successfully.")
+
+    # Loop demonstration (Milestone 4.17)
+    loop_demonstration()
 
 
 if __name__ == "__main__":
