@@ -164,6 +164,34 @@ def function_demonstration():
 
     # If you try printing local_message here, it will fail
     # print(local_message)  # ❌ Not accessible outside
+def calculate_packet_ratio(incoming_packets, outgoing_packets):
+    """
+    Accepts incoming and outgoing packet counts.
+    Returns the ratio of incoming to outgoing packets.
+    """
+
+    if outgoing_packets == 0:
+        return None  # Avoid division by zero
+
+    ratio = incoming_packets / outgoing_packets
+    return ratio
+
+
+def classify_traffic(ratio):
+    """
+    Accepts a packet ratio.
+    Returns traffic classification string.
+    """
+
+    if ratio is None:
+        return "Undefined (division by zero)"
+
+    if ratio > 1.5:
+        return "High Incoming Traffic"
+    elif ratio < 0.5:
+        return "High Outgoing Traffic"
+    else:
+        return "Balanced Traffic"
 
 
 def main():
@@ -188,6 +216,19 @@ def main():
     # Loop demonstration (Milestone 4.17)
     loop_demonstration()
     function_demonstration()
+    print("\n--- Data Flow Demonstration (4.19) ---")
+
+incoming = 300
+outgoing = 150
+
+ratio = calculate_packet_ratio(incoming, outgoing)
+
+classification = classify_traffic(ratio)
+
+print(f"Incoming packets: {incoming}")
+print(f"Outgoing packets: {outgoing}")
+print(f"Traffic ratio: {ratio}")
+print(f"Traffic classification: {classification}")
 
 
 if __name__ == "__main__":
