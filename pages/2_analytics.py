@@ -37,25 +37,6 @@ body, .stApp {
     background-size: 40px 40px;
 }
 
-.cyber-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(0,245,255,0.15);
-    margin-bottom: 40px;
-}
-.nav-logo {
-    font-family: 'Orbitron', monospace;
-    font-size: 20px; font-weight: 900;
-    color: #00f5ff;
-    text-shadow: 0 0 20px rgba(0,245,255,0.6);
-    letter-spacing: 0.2em;
-}
-.nav-links { display: flex; gap: 30px; }
-.nav-link { font-size: 11px; color: rgba(0,245,255,0.5); letter-spacing: 0.15em; text-transform: uppercase; }
-.nav-link.active { color: #00f5ff; }
-
 .page-title {
     font-family: 'Orbitron', monospace;
     font-size: 32px; font-weight: 700;
@@ -123,12 +104,6 @@ body, .stApp {
     border-color: rgba(0,245,255,0.3) !important;
     color: rgba(0,245,255,0.6) !important;
 }
-
-.stSelectbox > div > div {
-    background: rgba(0,10,20,0.9) !important;
-    border: 1px solid rgba(0,245,255,0.3) !important;
-    color: #00f5ff !important;
-}
 </style>
 """, unsafe_allow_html=True)
 
@@ -141,21 +116,23 @@ PLOTLY_LAYOUT = dict(
     xaxis=dict(gridcolor='rgba(0,245,255,0.07)', zeroline=False, showspikes=True, spikecolor='rgba(0,245,255,0.3)'),
     yaxis=dict(gridcolor='rgba(0,245,255,0.07)', zeroline=False),
     margin=dict(l=10, r=10, t=30, b=10),
-    height=320,
+    # height removed here; charts will specify explicit heights when needed
 )
 
-# ─── NAV ──────────────────────────────────────────────────────────────────────
-st.markdown("""
-<div class="cyber-nav">
-    <div class="nav-logo">⬡ SENTINEL</div>
-    <div class="nav-links">
-        <span class="nav-link">⬡ DETECT</span>
-        <span class="nav-link active">⬡ ANALYTICS</span>
-        <span class="nav-link">⬡ MODEL INFO</span>
-    </div>
-    <div style="font-size:11px; color:rgba(0,245,255,0.3); letter-spacing:0.1em;">SYS:ONLINE // v3.7</div>
-</div>
-""", unsafe_allow_html=True)
+# ─── RESPONSIVE NAV ───────────────────────────────────────────────────────────
+nav1, nav2, nav3, nav4, nav5 = st.columns([2, 1, 1, 1, 2])
+with nav1:
+    st.markdown('<div style="font-family:\'Orbitron\', monospace; font-size:20px; font-weight:900; color:#00f5ff; text-shadow:0 0 20px rgba(0,245,255,0.6); letter-spacing:0.2em; padding-top:5px;">⬡ SENTINEL</div>', unsafe_allow_html=True)
+with nav2:
+    if st.button("⬡ DETECT", use_container_width=True): st.switch_page("pages/1_detect.py")
+with nav3:
+    if st.button("⬡ ANALYTICS", use_container_width=True): st.switch_page("pages/2_analytics.py")
+with nav4:
+    if st.button("⬡ MODEL INFO", use_container_width=True): st.switch_page("pages/3_model.py")
+with nav5:
+    st.markdown('<div style="font-size:11px; color:rgba(0,245,255,0.3); letter-spacing:0.1em; text-align:right; padding-top:12px;">SYS:ONLINE // v3.7</div>', unsafe_allow_html=True)
+
+st.markdown('<div class="section-divider" style="margin-top: 10px;"></div>', unsafe_allow_html=True)
 
 # ─── BACK ─────────────────────────────────────────────────────────────────────
 col_back, _ = st.columns([1, 5])
@@ -179,9 +156,10 @@ if 'result_df' in st.session_state and st.session_state['result_df']:
     except Exception:
         result_df = None
 
-# If no data from session, generate demo data
 if result_df is None:
     st.info("ℹ No scan data found — loading demo dataset for analysis")
+    if st.button("← BACK TO DETECT", key="back_demo"):
+        st.switch_page("pages/1_detect.py")
     np.random.seed(42)
     n = 1500
     normal_data = {
@@ -218,6 +196,8 @@ if result_df is None:
     num_cols = raw_df.select_dtypes(include='number').columns
     scaled = scaler.fit_transform(raw_df[num_cols])
     model = IsolationForest(n_estimators=200, contamination=0.08, random_state=42)
+    # train isolation forest on the scaled demo data before making predictions
+    model.fit(scaled)
     preds = model.predict(scaled)
     scores = model.decision_function(scaled)
     result_df = raw_df.copy()
@@ -317,11 +297,12 @@ if len(numeric_cols) >= 2:
     ))
     fig_pca.update_layout(
         **PLOTLY_LAYOUT,
-        height=420,
+        # height is specified separately to avoid conflicts with layout defaults
         xaxis_title=f'PC1 ({var_explained[0]*100:.1f}% variance)',
         yaxis_title=f'PC2 ({var_explained[1]*100:.1f}% variance)',
         title=dict(text='', x=0.5)
     )
+    fig_pca.update_layout(height=420)
     st.plotly_chart(fig_pca, use_container_width=True)
 
 st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
@@ -345,7 +326,7 @@ if numeric_cols:
             x=anom_vals, name='Anomalous',
             marker_color='rgba(255,51,102,0.75)', nbinsx=40, opacity=0.75
         ))
-        fig_hist.update_layout(**PLOTLY_LAYOUT, barmode='overlay', xaxis_title=sel_feature, yaxis_title='Count')
+        fig_hist.update_layout(**PLOTLY_LAYOUT, height=320, barmode='overlay', xaxis_title=sel_feature, yaxis_title='Count')
         st.plotly_chart(fig_hist, use_container_width=True)
 
     with col_box:
@@ -362,7 +343,7 @@ if numeric_cols:
             line_color='rgba(255,51,102,0.9)',
             fillcolor='rgba(255,51,102,0.1)'
         ))
-        fig_box.update_layout(**PLOTLY_LAYOUT, yaxis_title=sel_feature)
+        fig_box.update_layout(**PLOTLY_LAYOUT, height=320, yaxis_title=sel_feature)
         st.plotly_chart(fig_box, use_container_width=True)
 
 st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
@@ -393,13 +374,17 @@ if numeric_cols and '__anomaly_score' in result_df.columns:
             marker=dict(color=colors_corr, line=dict(width=0)),
             hovertemplate='%{y}: %{x:.3f}<extra></extra>'
         ))
+        # apply base layout and explicit height/title first
         fig_corr.update_layout(
-            **PLOTLY_LAYOUT, height=380,
-            xaxis_title='|Correlation with Anomaly Score|',
-            yaxis=dict(
-                gridcolor='rgba(0,245,255,0.07)', zeroline=False,
-                tickfont=dict(size=10)
-            )
+            **PLOTLY_LAYOUT,
+            height=380,
+            xaxis_title='|Correlation with Anomaly Score|'
+        )
+        # customize the y-axis separately to avoid passing the same key twice
+        fig_corr.update_yaxes(
+            gridcolor='rgba(0,245,255,0.07)',
+            zeroline=False,
+            tickfont=dict(size=10)
         )
         st.plotly_chart(fig_corr, use_container_width=True)
 

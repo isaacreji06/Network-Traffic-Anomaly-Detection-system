@@ -31,16 +31,6 @@ body, .stApp {
     background-size: 40px 40px;
 }
 
-.cyber-nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 0; border-bottom: 1px solid rgba(0,245,255,0.15);
-    margin-bottom: 40px;
-}
-.nav-logo { font-family: 'Orbitron', monospace; font-size: 20px; font-weight: 900; color: #00f5ff; text-shadow: 0 0 20px rgba(0,245,255,0.6); letter-spacing: 0.2em; }
-.nav-links { display: flex; gap: 30px; }
-.nav-link { font-size: 11px; color: rgba(0,245,255,0.5); letter-spacing: 0.15em; text-transform: uppercase; }
-.nav-link.active { color: #00f5ff; }
-
 .page-title { font-family: 'Orbitron', monospace; font-size: 32px; font-weight: 700; color: #00f5ff; text-shadow: 0 0 30px rgba(0,245,255,0.5); letter-spacing: 0.1em; margin-bottom: 8px; }
 .page-subtitle { font-size: 13px; color: rgba(0,245,255,0.5); letter-spacing: 0.1em; margin-bottom: 40px; }
 
@@ -123,18 +113,20 @@ body, .stApp {
 </style>
 """, unsafe_allow_html=True)
 
-# NAV
-st.markdown("""
-<div class="cyber-nav">
-    <div class="nav-logo">⬡ SENTINEL</div>
-    <div class="nav-links">
-        <span class="nav-link">⬡ DETECT</span>
-        <span class="nav-link">⬡ ANALYTICS</span>
-        <span class="nav-link active">⬡ MODEL INFO</span>
-    </div>
-    <div style="font-size:11px; color:rgba(0,245,255,0.3); letter-spacing:0.1em;">SYS:ONLINE // v3.7</div>
-</div>
-""", unsafe_allow_html=True)
+# ─── RESPONSIVE NAV ───────────────────────────────────────────────────────────
+nav1, nav2, nav3, nav4, nav5 = st.columns([2, 1, 1, 1, 2])
+with nav1:
+    st.markdown('<div style="font-family:\'Orbitron\', monospace; font-size:20px; font-weight:900; color:#00f5ff; text-shadow:0 0 20px rgba(0,245,255,0.6); letter-spacing:0.2em; padding-top:5px;">⬡ SENTINEL</div>', unsafe_allow_html=True)
+with nav2:
+    if st.button("⬡ DETECT", use_container_width=True): st.switch_page("pages/1_detect.py")
+with nav3:
+    if st.button("⬡ ANALYTICS", use_container_width=True): st.switch_page("pages/2_analytics.py")
+with nav4:
+    if st.button("⬡ MODEL INFO", use_container_width=True): st.switch_page("pages/3_model.py")
+with nav5:
+    st.markdown('<div style="font-size:11px; color:rgba(0,245,255,0.3); letter-spacing:0.1em; text-align:right; padding-top:12px;">SYS:ONLINE // v3.7</div>', unsafe_allow_html=True)
+
+st.markdown('<div class="section-divider" style="margin-top: 10px;"></div>', unsafe_allow_html=True)
 
 col_back, _ = st.columns([1, 5])
 with col_back:
@@ -182,7 +174,6 @@ with col_l:
     """, unsafe_allow_html=True)
 
 with col_r:
-    # Visualize path length concept
     np.random.seed(42)
     depths_normal = np.random.normal(12, 2, 200)
     depths_anom = np.random.normal(4, 1.5, 30)
