@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import time
-import json
 
 st.set_page_config(
     page_title="SENTINEL — Detect",
@@ -37,42 +36,6 @@ body, .stApp {
     background-size: 40px 40px;
 }
 
-/* NAV BAR */
-.cyber-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(0,245,255,0.15);
-    margin-bottom: 40px;
-}
-
-.nav-logo {
-    font-family: 'Orbitron', monospace;
-    font-size: 20px;
-    font-weight: 900;
-    color: #00f5ff;
-    text-shadow: 0 0 20px rgba(0,245,255,0.6);
-    letter-spacing: 0.2em;
-}
-
-.nav-links {
-    display: flex;
-    gap: 30px;
-}
-
-.nav-link {
-    font-size: 11px;
-    color: rgba(0,245,255,0.5);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: color 0.2s;
-    text-decoration: none;
-}
-
-.nav-link.active { color: #00f5ff; }
-
 /* PAGE TITLE */
 .page-title {
     font-family: 'Orbitron', monospace;
@@ -89,52 +52,6 @@ body, .stApp {
     color: rgba(0,245,255,0.5);
     letter-spacing: 0.1em;
     margin-bottom: 40px;
-}
-
-/* UPLOAD ZONE */
-.upload-zone {
-    border: 2px dashed rgba(0,245,255,0.3);
-    background: rgba(0,245,255,0.02);
-    padding: 50px;
-    text-align: center;
-    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
-    transition: all 0.3s ease;
-    margin-bottom: 30px;
-}
-
-.upload-zone:hover {
-    border-color: rgba(0,245,255,0.6);
-    background: rgba(0,245,255,0.05);
-}
-
-.upload-icon { font-size: 40px; margin-bottom: 16px; }
-.upload-text {
-    font-size: 14px;
-    color: rgba(0,245,255,0.6);
-    letter-spacing: 0.1em;
-}
-.upload-hint {
-    font-size: 11px;
-    color: rgba(0,245,255,0.35);
-    margin-top: 8px;
-    letter-spacing: 0.05em;
-}
-
-/* Streamlit file uploader override */
-[data-testid="stFileUploader"] {
-    background: transparent !important;
-}
-
-[data-testid="stFileUploader"] > div {
-    background: rgba(0,245,255,0.03) !important;
-    border: 2px dashed rgba(0,245,255,0.3) !important;
-    border-radius: 0 !important;
-    padding: 30px !important;
-}
-
-[data-testid="stFileUploader"] label {
-    color: rgba(0,245,255,0.7) !important;
-    font-family: 'Share Tech Mono', monospace !important;
 }
 
 /* BUTTONS */
@@ -178,15 +95,6 @@ body, .stApp {
 .metric-card:hover {
     border-color: rgba(0,245,255,0.5);
     box-shadow: 0 0 20px rgba(0,245,255,0.08);
-}
-
-.metric-card::after {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 40px; height: 40px;
-    background: rgba(0,245,255,0.03);
-    clip-path: polygon(0 0, 100% 0, 100% 100%);
 }
 
 .metric-label {
@@ -236,7 +144,6 @@ body, .stApp {
 .threat-bar-bg {
     background: rgba(0,245,255,0.08);
     height: 12px;
-    border-radius: 0;
     position: relative;
     overflow: hidden;
     clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
@@ -245,16 +152,6 @@ body, .stApp {
 .threat-bar-fill {
     height: 100%;
     transition: width 1.5s cubic-bezier(0.23, 1, 0.32, 1);
-    position: relative;
-}
-
-.threat-bar-fill::after {
-    content: '';
-    position: absolute;
-    right: 0; top: 0; bottom: 0;
-    width: 4px;
-    background: rgba(255,255,255,0.8);
-    filter: blur(2px);
 }
 
 .threat-label-row {
@@ -265,94 +162,11 @@ body, .stApp {
     color: rgba(0,245,255,0.4);
 }
 
-/* TABLE STYLES */
-.flagged-table-header {
-    font-family: 'Orbitron', monospace;
-    font-size: 14px;
-    letter-spacing: 0.15em;
-    color: rgba(0,245,255,0.8);
-    margin: 30px 0 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.table-badge {
-    background: rgba(255,51,102,0.15);
-    border: 1px solid rgba(255,51,102,0.4);
-    color: #ff3366;
-    font-size: 11px;
-    padding: 3px 12px;
-    letter-spacing: 0.1em;
-}
-
-/* Streamlit dataframe override */
-[data-testid="stDataFrame"] {
-    background: rgba(0,10,20,0.9) !important;
-    border: 1px solid rgba(0,245,255,0.15) !important;
-}
-
-/* Progress bar */
-.stProgress > div > div {
-    background: linear-gradient(90deg, #00f5ff, #0080ff) !important;
-    box-shadow: 0 0 15px rgba(0,245,255,0.5) !important;
-}
-
-/* Spinner */
-.stSpinner > div {
-    border-color: rgba(0,245,255,0.3) !important;
-    border-top-color: #00f5ff !important;
-}
-
-/* SUCCESS / WARNING / ERROR */
-.stSuccess {
-    background: rgba(0,255,136,0.05) !important;
-    border: 1px solid rgba(0,255,136,0.3) !important;
-    color: #00ff88 !important;
-}
-
-.stWarning {
-    background: rgba(255,170,0,0.05) !important;
-    border: 1px solid rgba(255,170,0,0.3) !important;
-}
-
-.stError {
-    background: rgba(255,51,102,0.05) !important;
-    border: 1px solid rgba(255,51,102,0.3) !important;
-}
-
 /* SECTION DIVIDER */
 .section-divider {
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(0,245,255,0.3), transparent);
     margin: 30px 0;
-}
-
-/* ALERT FEED */
-.alert-feed {
-    background: rgba(0,10,20,0.8);
-    border: 1px solid rgba(255,51,102,0.2);
-    padding: 20px;
-    max-height: 200px;
-    overflow-y: auto;
-    font-size: 11px;
-    line-height: 2;
-}
-
-.alert-line { color: rgba(255,51,102,0.8); }
-.alert-line.info { color: rgba(0,245,255,0.5); }
-.alert-line.ok { color: rgba(0,255,136,0.7); }
-
-/* SELECT BOX */
-.stSelectbox > div > div {
-    background: rgba(0,10,20,0.9) !important;
-    border: 1px solid rgba(0,245,255,0.3) !important;
-    color: #00f5ff !important;
-}
-
-/* SLIDER */
-.stSlider > div > div > div {
-    background: rgba(0,245,255,0.2) !important;
 }
 
 /* Back button */
@@ -368,25 +182,28 @@ body, .stApp {
 # ─── IMPORTS ──────────────────────────────────────────────────────────────────
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
+import plotly.graph_objects as go
 
-# ─── NAV ──────────────────────────────────────────────────────────────────────
-st.markdown("""
-<div class="cyber-nav">
-    <div class="nav-logo">⬡ SENTINEL</div>
-    <div class="nav-links">
-        <span class="nav-link active">⬡ DETECT</span>
-        <span class="nav-link">⬡ ANALYTICS</span>
-        <span class="nav-link">⬡ MODEL INFO</span>
-    </div>
-    <div style="font-size:11px; color:rgba(0,245,255,0.3); letter-spacing:0.1em;">SYS:ONLINE // v3.7</div>
-</div>
-""", unsafe_allow_html=True)
+# ─── RESPONSIVE NAV ───────────────────────────────────────────────────────────
+nav1, nav2, nav3, nav4, nav5 = st.columns([2, 1, 1, 1, 2])
+with nav1:
+    st.markdown('<div style="font-family:\'Orbitron\', monospace; font-size:20px; font-weight:900; color:#00f5ff; text-shadow:0 0 20px rgba(0,245,255,0.6); letter-spacing:0.2em; padding-top:5px;">⬡ SENTINEL</div>', unsafe_allow_html=True)
+with nav2:
+    if st.button("⬡ DETECT", use_container_width=True): st.switch_page("pages/1_detect.py")
+with nav3:
+    if st.button("⬡ ANALYTICS", use_container_width=True): st.switch_page("pages/2_analytics.py")
+with nav4:
+    if st.button("⬡ MODEL INFO", use_container_width=True): st.switch_page("pages/3_model.py")
+with nav5:
+    st.markdown('<div style="font-size:11px; color:rgba(0,245,255,0.3); letter-spacing:0.1em; text-align:right; padding-top:12px;">SYS:ONLINE // v3.7</div>', unsafe_allow_html=True)
+
+st.markdown('<div class="section-divider" style="margin-top: 10px;"></div>', unsafe_allow_html=True)
 
 # ─── BACK BUTTON ──────────────────────────────────────────────────────────────
 col_back, _ = st.columns([1, 5])
 with col_back:
     st.markdown('<div class="back-btn">', unsafe_allow_html=True)
-    if st.button("← BACK"):
+    if st.button("← BACK TO HOME"):
         st.switch_page("app.py")
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -471,6 +288,16 @@ elif uploaded_file is not None:
         st.error(f"✗ PARSE ERROR: {e}")
 
 # ─── ANALYSIS ─────────────────────────────────────────────────────────────────
+# restore any previous scan from session state so results persist across runs
+result_df = None
+scan_done = False
+if 'result_df' in st.session_state and st.session_state['result_df']:
+    try:
+        result_df = pd.read_json(st.session_state['result_df'])
+        scan_done = True
+    except Exception:
+        result_df = None
+
 if df is not None:
     st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 
@@ -481,11 +308,9 @@ if df is not None:
     if numeric_df.empty or numeric_df.shape[1] < 2:
         st.error("✗ INSUFFICIENT NUMERIC FEATURES — Minimum 2 required.")
     else:
-        # Show data preview
         with st.expander("▸ RAW TRAFFIC PREVIEW (first 20 rows)"):
             st.dataframe(df.head(20), use_container_width=True)
 
-        # ─── RUN DETECTION ────────────────────────────────────────────────
         run_col, _ = st.columns([1, 3])
         with run_col:
             run_btn = st.button("⬡  INITIATE THREAT SCAN  ⬡", use_container_width=True)
@@ -514,11 +339,15 @@ if df is not None:
                 result_df['__anomaly_label'] = result_df['__anomaly_flag'].map({1: 'Normal', -1: 'Anomalous'})
                 result_df['__anomaly_score'] = np.round(scores, 4)
                 result_df['__risk_pct'] = np.round((scores.min() - scores) / (scores.min() - scores.max()) * 100, 1)
+                # persist scan output so we can show results after reruns or when clicking analytics
+                st.session_state['result_df'] = result_df.to_json()
+                scan_done = True
 
             progress.empty()
             st.success("✓ SCAN COMPLETE — THREAT ANALYSIS READY")
 
-            # ─── METRICS ──────────────────────────────────────────────────
+        # show results anytime a scan is stored in session_state
+        if scan_done:
             total = len(result_df)
             anomalies = (result_df['__anomaly_label'] == 'Anomalous').sum()
             normal = total - anomalies
@@ -567,7 +396,6 @@ if df is not None:
             </div>
             """, unsafe_allow_html=True)
 
-            # ─── THREAT GAUGE ─────────────────────────────────────────────
             st.markdown(f"""
             <div class="threat-section">
                 <div class="threat-title">▸ THREAT INDEX GAUGE</div>
@@ -587,14 +415,12 @@ if df is not None:
             </div>
             """, unsafe_allow_html=True)
 
-            # ─── ANOMALY SCORE DISTRIBUTION ───────────────────────────────
             st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 
             col_chart1, col_chart2 = st.columns(2)
 
             with col_chart1:
                 st.markdown("**▸ ANOMALY SCORE DISTRIBUTION**", unsafe_allow_html=False)
-                import plotly.graph_objects as go
 
                 normal_scores = result_df[result_df['__anomaly_label'] == 'Normal']['__anomaly_score']
                 anom_scores = result_df[result_df['__anomaly_label'] == 'Anomalous']['__anomaly_score']
@@ -650,14 +476,8 @@ if df is not None:
                 )
                 st.plotly_chart(fig2, use_container_width=True)
 
-            # ─── TOP RISKY FLOWS ──────────────────────────────────────────
             st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
-            st.markdown(f"""
-            <div class="flagged-table-header">
-                ▸ FLAGGED ANOMALOUS TRAFFIC
-                <span class="table-badge">⚠ {anomalies} THREATS</span>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown("### ▸ FLAGGED ANOMALOUS TRAFFIC")
 
             flagged = result_df[result_df['__anomaly_label'] == 'Anomalous'].copy()
             flagged = flagged.sort_values('__risk_pct', ascending=False)
@@ -675,7 +495,6 @@ if df is not None:
                 height=350
             )
 
-            # ─── DOWNLOAD ─────────────────────────────────────────────────
             st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
             col_dl1, col_dl2, col_dl3 = st.columns(3)
             with col_dl1:
@@ -706,11 +525,9 @@ if df is not None:
                 )
             with col_dl3:
                 if st.button("⬡ VIEW ANALYTICS →", use_container_width=True):
-                    st.session_state['result_df'] = result_df.to_json()
                     st.switch_page("pages/2_analytics.py")
 
 else:
-    # IDLE state - show info panels
     st.markdown("""
     <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin-top:20px;">
         <div style="border:1px solid rgba(0,245,255,0.15); padding:24px; background:rgba(0,10,20,0.5);
